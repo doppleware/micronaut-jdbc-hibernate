@@ -2,6 +2,8 @@ package example.micronaut;
 
 import example.micronaut.domain.Genre;
 import io.micronaut.data.annotation.Repository;
+import io.micronaut.tracing.annotation.ContinueSpan;
+import io.micronaut.tracing.annotation.NewSpan;
 import io.micronaut.transaction.annotation.ReadOnly;
 import jakarta.inject.Singleton;
 
@@ -50,6 +52,7 @@ public class GenreRepositoryImpl implements GenreRepository {
     }
 
     @ReadOnly // <3>
+    @NewSpan
     public List<Genre> findAll(@NotNull SortingAndOrderArguments args) {
         String qlString = "SELECT g FROM Genre as g";
         if (args.order() != null && args.sort() != null && VALID_PROPERTY_NAMES.contains(args.sort())) {

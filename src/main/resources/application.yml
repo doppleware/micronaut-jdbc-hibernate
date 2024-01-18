@@ -19,9 +19,10 @@ otel:
 datasources:
   default:
     schema-generate: CREATE_DROP
-    url: 'jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE'
+    url: 'jdbc:otel:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE'
     username: sa
-    driverClassName: org.h2.Driver
+    password: ''
+    driver-class-name: io.opentelemetry.instrumentation.jdbc.OpenTelemetryDriver
 
 
 jpa:
