@@ -20,6 +20,10 @@ dependencies {
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
     annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
 
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.testcontainers:testcontainers")
+
     implementation("io.micronaut.tracing:micronaut-tracing-opentelemetry-http")
     //implementation("io.micronaut.data:`micronaut-data-jdbc`")
     implementation("io.opentelemetry.instrumentation:opentelemetry-jdbc")
@@ -30,7 +34,7 @@ dependencies {
     implementation("io.micronaut.validation:micronaut-validation")
     implementation("io.opentelemetry:opentelemetry-exporter-otlp")
     implementation("io.opentelemetry:opentelemetry-sdk")
-
+    implementation("org.postgresql:postgresql")
     implementation("jakarta.validation:jakarta.validation-api")
     compileOnly("org.graalvm.nativeimage:svm")
     compileOnly("io.micronaut:micronaut-http-client")

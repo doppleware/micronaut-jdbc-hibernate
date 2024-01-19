@@ -1,6 +1,7 @@
 package example.micronaut;
 
 import example.micronaut.domain.Genre;
+import io.micronaut.context.annotation.Property;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -9,10 +10,19 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import io.opentelemetry.instrumentation.jdbc.OpenTelemetryDriver;
 import jakarta.inject.Inject;
+import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.junit.jupiter.TestcontainersExtension;
 
+import java.lang.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,17 +35,48 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@MicronautTest // <1>
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@ExtendWith({OtelDriverExtension.class})
+
+@Inherited
+@interface SetDefaultDriver {
+}
+
+class OtelDriverExtension implements BeforeAllCallback {
+
+    @Override
+    public void beforeAll(ExtensionContext context) throws Exception {
+        OpenTelemetryDriver.addDriverCandidate(new org.testcontainers.jdbc.ContainerDatabaseDriver());
+    }
+}
+
+@SetDefaultDriver
+@MicronautTest() // <1>
+@Testcontainers(disabledWithoutDocker = true)
+@Property(name = "datasources.default.url", value = "jdbc:otel:tc:postgresql:///postgres")
+@Property(name = "datasources.default.driver-class-name", value = "io.opentelemetry.instrumentation.jdbc.OpenTelemetryDriver")
 class GenreControllerTest {
 
+
+    public GenreControllerTest(){
+    }
     private BlockingHttpClient blockingClient;
 
     @Inject
     @Client("/")
     HttpClient client; // <2>
 
+
+    @BeforeClass
+    public static void suiteSetup() {
+        OpenTelemetryDriver.addDriverCandidate(new org.testcontainers.jdbc.ContainerDatabaseDriver());
+
+    }
+
     @BeforeEach
     void setup() {
+
         blockingClient = client.toBlocking();
     }
 
