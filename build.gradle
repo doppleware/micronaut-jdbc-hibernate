@@ -1,8 +1,12 @@
+
+
 plugins {
 
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("io.micronaut.application") version "4.2.0"
     id("io.micronaut.aot") version "4.2.0"
+    id("org.flywaydb.flyway") version "10.6.0"
+
 
 }
 
@@ -12,6 +16,9 @@ group = "example.micronaut"
 repositories {
     mavenCentral()
 }
+
+
+
 
 dependencies {
 
@@ -23,6 +30,8 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:testcontainers")
+    implementation("io.micronaut.flyway:micronaut-flyway")
+
 
     implementation("io.micronaut.tracing:micronaut-tracing-opentelemetry-http")
     //implementation("io.micronaut.data:`micronaut-data-jdbc`")
@@ -37,6 +46,8 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("jakarta.validation:jakarta.validation-api")
     compileOnly("org.graalvm.nativeimage:svm")
+    compileOnly("org.flywaydb:flyway-core")
+
     compileOnly("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.h2database:h2")
@@ -52,6 +63,11 @@ application {
 java {
     sourceCompatibility = JavaVersion.toVersion("17")
     targetCompatibility = JavaVersion.toVersion("17")
+}
+
+flyway {
+
+    locations = ['filesystem:src/main/resources/db/migration/']
 }
 
 graalvmNative.toolchainDetection = false

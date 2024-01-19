@@ -38,7 +38,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @ExtendWith({OtelDriverExtension.class})
-
 @Inherited
 @interface SetDefaultDriver {
 }
@@ -54,7 +53,7 @@ class OtelDriverExtension implements BeforeAllCallback {
 @SetDefaultDriver
 @MicronautTest() // <1>
 @Testcontainers(disabledWithoutDocker = true)
-@Property(name = "datasources.default.url", value = "jdbc:otel:tc:postgresql:///postgres")
+@Property(name = "datasources.default.url", value = "jdbc:otel:tc:postgresql:10.16:///test")
 @Property(name = "datasources.default.driver-class-name", value = "io.opentelemetry.instrumentation.jdbc.OpenTelemetryDriver")
 class GenreControllerTest {
 

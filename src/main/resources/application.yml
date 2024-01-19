@@ -24,6 +24,10 @@ datasources:
     password: ''
     driver-class-name: io.opentelemetry.instrumentation.jdbc.OpenTelemetryDriver
 
+flyway:
+  datasources:
+    default:
+      enabled: true
 
 jpa:
   default:
