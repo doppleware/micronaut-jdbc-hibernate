@@ -24,17 +24,6 @@ public class Application {
         Micronaut.run(Application.class, args);
     }
 
-//    @Singleton
-//    @Context
-//    @Order(-1)
-//    BeanInitializedEventListener<DataSource> otel(OpenTelemetry telemetry) {
-//        GlobalOpenTelemetry.resetForTest();
-//        GlobalOpenTelemetry.set(telemetry);
-//        return event -> {
-//            DataSource dataSource = event.getBean();
-//            return dataSource;
-//        };
-//    }
 
         @Singleton
         @Context
@@ -48,14 +37,5 @@ public class Application {
 
         }
 
-//    @Singleton
-//    BeanCreatedEventListener<DataSource> otel(OpenTelemetry telemetry, DataSourceResolver resolver) {
-//        return event -> {
-//            DataSource dataSource = event.getBean();
-//            return new OpenTelemetryDataSource(
-//                    resolver.resolve(dataSource),
-//                    telemetry
-//            );
-//        };
-//    }
+
 }
